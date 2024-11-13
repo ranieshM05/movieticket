@@ -1,5 +1,4 @@
 // src/contexts/AuthContext.js
-
 import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
@@ -17,7 +16,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
+      {children} {/* Provide context to all children components */}
     </AuthContext.Provider>
   );
 };

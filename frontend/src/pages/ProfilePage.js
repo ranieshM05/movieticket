@@ -1,7 +1,7 @@
 // src/pages/ProfilePage.js
 
 import React from 'react';
-import { useAuth } from '../contexts/AuthContext'; // Correct import for the useAuth hook
+import { useAuth } from '../contexts/AuthContext';
 
 const ProfilePage = () => {
   const { user, login, logout } = useAuth();
