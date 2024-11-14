@@ -14,14 +14,14 @@ const useFetchMovies = (url) => {
       }
 
       try {
-        console.log("Fetching movies from:", url); // Log the URL being fetched
+        console.log("Fetching movies from:", url); 
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
         
-        // Check if results exist and are an array
+        
         if (data.results && Array.isArray(data.results)) {
           setMovies(data.results);
         } else {

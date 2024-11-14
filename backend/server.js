@@ -24,7 +24,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 // Import routes
 const authRoutes = require('./Routes/authRoutes');
 const movieRoutes = require('./routes/movieRoutes');
-const bookingRoutes = require('./routes/bookingRoutes');
+const bookingRoutes = require('./Routes/bookingRoutes');
 
 // Define a root route
 app.get('/', (req, res) => {

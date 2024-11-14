@@ -4,23 +4,22 @@ import React, { createContext, useContext, useState } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Manage user state
+  const [user, setUser] = useState(null);
 
-  const login = (userData) => {
-    setUser(userData); // Update user state on login
-  };
-
-  const logout = () => {
-    setUser(null); // Clear user state on logout
-  };
+  const login = (userData) => setUser(userData);
+  const logout = () => setUser(null);
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
-      {children} {/* Provide context to all children components */}
+      {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
-  return useContext(AuthContext); // Custom hook to access AuthContext
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };
