@@ -3,10 +3,12 @@ import { useParams } from "react-router-dom";
 import useFetchMovies from "../hooks/useFetchMovies";
 
 function MoviePage() {
-  const { id } = useParams();
-  const { movies } = useFetchMovies();
+  const { id } = useParams(); // Get movie ID from URL
+  const { movies, loading, error } = useFetchMovies(); // Fetch movies from the Fandango API
   const movie = movies.find((m) => m.id === parseInt(id));
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
   if (!movie) return <div>Movie not found</div>;
 
   return (
@@ -19,4 +21,3 @@ function MoviePage() {
 }
 
 export default MoviePage;
-  

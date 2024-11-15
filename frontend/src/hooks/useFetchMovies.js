@@ -1,43 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-const useFetchMovies = (url) => {
+const useFetchMovies = (searchQuery = "avengers") => {
   const [movies, setMovies] = useState([]);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const apiKey = "your-fandango-api-key"; // Replace with your API key
+  const apiSig = "776f5f2a6e1a22a5ef33c9d04d904c2593144e0e4da11b05abf6ed9ea7fb747e"; // Replace with the correct API signature
 
   useEffect(() => {
     const fetchMovies = async () => {
-      if (!url) {
-        setError('URL is undefined');
-        setLoading(false);
-        return;
-      }
-
+      setLoading(true);
       try {
-        console.log("Fetching movies from:", url); 
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
+        const response = await fetch(`http://api.fandango.com/v1/?op=contentsearch&repos=all&q=${searchQuery}&apikey=${apiKey}&sig=${apiSig}`);
         const data = await response.json();
-        
-        
-        if (data.results && Array.isArray(data.results)) {
-          setMovies(data.results);
+
+        if (data && data.movies) {
+          setMovies(data.movies);
         } else {
-          throw new Error('Expected results to be an array');
+          setError("No movies found.");
         }
-      } catch (error) {
-        setError(error.message);
+      } catch (err) {
+        setError("Failed to fetch movies.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchMovies();
-  }, [url]);
+  }, [searchQuery]);
 
-  return { movies, error, loading };
+  return { movies, loading, error };
 };
 
 export default useFetchMovies;

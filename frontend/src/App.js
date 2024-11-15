@@ -9,7 +9,8 @@ import Home from './pages/Home';
 import MoviePage from './pages/MoviePage';
 import BookingPage from './pages/BookingPage';
 import PaymentPage from './pages/PaymentPage';
-import ProfilePage from './pages/ProfilePage';  
+import ProfilePage from './pages/ProfilePage';
+import ThankYouPage from "./pages/ThankYouPage";
 import AboutUs from './pages/AboutUs';
 import { AuthProvider } from './contexts/AuthContext';
 import './App.css';
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/movie/:id" element={<MoviePage />} />
                 <Route path="/booking/:id" element={<BookingPage />} />
                 <Route path="/payment" element={<PaymentPage />} />
+                <Route path="/thank-you" element={<ThankYouPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/about" element={<AboutUs />} />
             </Routes>
