@@ -1,17 +1,20 @@
-const express = require('express');
-const { getMovies } = require('../controllers/movieController');
-const Movie = require('../Models/Movie');
+// Routes/movieRoutes.js
+const express = require("express");
+const Movie = require("../Models/Movie");  // Ensure this import is correct
 const router = express.Router();
-router.get('/api/movies', async (req, res) => {
-    try {
-      const movies = await Movie.find(); // Fetching movies from the database
-      res.json({ results: movies }); // Return results in the expected format
-    } catch (error) {
-      res.status(500).json({ message: 'Error fetching movies' });
-    }
-  });
 
-router.get('/popular', getMovies);
+// POST request to save movies
+router.post("/", async (req, res) => {
+  try {
+    const movies = req.body.movies;
 
+    // Save each movie to the database
+    const savedMovies = await Movie.insertMany(movies);
+
+    res.json({ success: true, data: savedMovies });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to save movies", error: error.message });
+  }
+});
 
 module.exports = router;

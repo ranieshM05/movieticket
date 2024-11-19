@@ -1,33 +1,61 @@
 import { useState, useEffect } from "react";
 
-const useFetchMovies = (searchQuery = "avengers") => {
+const useFetchMovies = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const apiKey = "your-fandango-api-key"; // Replace with your API key
-  const apiSig = "776f5f2a6e1a22a5ef33c9d04d904c2593144e0e4da11b05abf6ed9ea7fb747e"; // Replace with the correct API signature
 
   useEffect(() => {
     const fetchMovies = async () => {
-      setLoading(true);
       try {
-        const response = await fetch(`http://api.fandango.com/v1/?op=contentsearch&repos=all&q=${searchQuery}&apikey=${apiKey}&sig=${apiSig}`);
+        // Fetch movies from TMDb
+        const response = await fetch(
+          `https://api.themoviedb.org/3/movie/popular?api_key=670580d0a7d823c15526bf772c04b9ee&language=en-US&page=1`
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch from TMDb API");
+        }
+
         const data = await response.json();
 
-        if (data && data.movies) {
-          setMovies(data.movies);
-        } else {
-          setError("No movies found.");
+        if (data.results) {
+          setMovies(data.results);
+
+          // Send movies to backend to save in the database
+          const saveMoviesToBackend = async () => {
+            const backendResponse = await fetch('http://localhost:3000/api/movies', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ movies: data.results }),
+            });
+
+            if (!backendResponse.ok) {
+              throw new Error("Failed to save movies to backend");
+            }
+
+            const backendData = await backendResponse.json();
+            if (backendData.success) {
+              console.log("Movies successfully saved to the backend!");
+            } else {
+              console.error("Failed to save movies.");
+            }
+          };
+
+          saveMoviesToBackend();
         }
       } catch (err) {
-        setError("Failed to fetch movies.");
+        console.error("Error fetching or saving movies:", err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
     fetchMovies();
-  }, [searchQuery]);
+  }, []);
 
   return { movies, loading, error };
 };

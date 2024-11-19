@@ -1,13 +1,40 @@
-const tmdb = require('../config/tmdb');
+const Movie = require("../Models/Movie");
+const axios = require("axios");
 
-const getMovies = async (req, res) => {
+// Fetch movies from Fandango API
+const fetchMovies = async (req, res) => {
   try {
-    const response = await tmdb.get('/movie/popular');
-    res.json(response.data.results);
+    const { data } = await axios.get("https://api.fandango.com/some-movie-endpoint", {
+      params: { apiKey: process.env.FANDANGO_API_KEY },
+    });
+
+    const movies = data.movies.map((movie) => ({
+      id: movie.id,
+      title: movie.title,
+      description: movie.description,
+      imageUrl: movie.poster_url,
+      releaseDate: movie.release_date,
+      genre: movie.genre,
+      rating: movie.rating,
+    }));
+
+    await Movie.deleteMany(); // Clear old data
+    await Movie.insertMany(movies); // Save new data
+
+    res.json(movies);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error fetching movies' });
+    res.status(500).json({ error: "Failed to fetch movies" });
   }
 };
 
-module.exports = { getMovies };
+// Get all movies from the database
+const getMovies = async (req, res) => {
+  try {
+    const movies = await Movie.find();
+    res.json(movies);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve movies" });
+  }
+};
+
+module.exports = { fetchMovies, getMovies };
