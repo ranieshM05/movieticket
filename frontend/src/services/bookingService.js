@@ -1,4 +1,4 @@
-const API_URL = "/api/booking";
+const API_URL = "https://movieticket-4.onrender.com/api/booking";
 
 const bookingService = {
   bookSeats: async (data) => {
