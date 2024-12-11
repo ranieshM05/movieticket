@@ -22,8 +22,6 @@
   
   "license": "ISC",
   
-  "description": "",
-  
   "dependencies": {
   
     
@@ -84,5 +82,7 @@
     
   "nodemon": "^3.1.7"
   
-  }
+  },
+  
+  "description": ""
 }
