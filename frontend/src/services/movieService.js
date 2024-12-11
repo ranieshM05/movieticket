@@ -1,4 +1,4 @@
-const API_URL = "https://movieticket-4.onrender.com/api/movies/popular"; // Updated URL to include '/popular'
+const API_URL = "http://localhost:3001/api/movies/popular"; // Updated URL to include '/popular'
 
 const movieService = {
   getMovies: async () => {
